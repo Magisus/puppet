@@ -107,12 +107,18 @@ class Puppet::Util::Autoload
     # @api private
     def get_file(name, env)
       name = name + '.rb' unless name =~ /\.rb$/
-      path = search_directories(env).find { |dir| Puppet::FileSystem.exist?(File.join(dir, name)) }
+      dirs = search_directories(env)
+      path = dirs.find { |dir| Puppet::FileSystem.exist?(File.join(dir, name)) }
+      if name =~ /splunk/
+        Puppet.info "Searching dirs #{dirs}"
+        Puppet.info "Getting path for #{name}, path is #{path}"
+      end
       path and File.join(path, name)
     end
 
     def files_to_load(path, env)
-      search_directories(env).map {|dir| files_in_dir(dir, path) }.flatten.uniq
+      files = search_directories(env).map {|dir| files_in_dir(dir, path) }.flatten.uniq
+      files
     end
 
     # @api private

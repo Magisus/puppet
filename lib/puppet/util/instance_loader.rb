@@ -57,6 +57,7 @@ module Puppet::Util::InstanceLoader
             return nil
           end
         else
+          Puppet.info "Loading failed for #{type} #{name}"
           return nil
         end
       end
